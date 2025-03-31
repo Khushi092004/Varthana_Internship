@@ -1,17 +1,16 @@
-const pool= require("/..db")
-
-const pool = require("../db");
+const pool= require("../db");
+const { queries } = require("../queries/queries");
 
 // Check if user already exists
 const getUserByEmail = async (email) => {
-  const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+  const result = await pool.query(queries.getUserByEmail, [email]);
   return result.rows[0]; // Return user object if exists
 };
 
 // Insert new user
 const createUser = async (name, email, hashedPassword) => {
   const result = await pool.query(
-    "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *",
+    queries.createUser,
     [name, email, hashedPassword]
   );
   return result.rows[0];
@@ -19,7 +18,7 @@ const createUser = async (name, email, hashedPassword) => {
 
 // Get user by ID
 const getUserById = async (id) => {
-  const result = await pool.query("SELECT id, name, email FROM users WHERE id = $1", [id]);
+  const result = await pool.query(queries.getUserById, [id]);
   return result.rows[0];
 };
 
