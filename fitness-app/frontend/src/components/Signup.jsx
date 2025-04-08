@@ -33,7 +33,7 @@ const Signup = () => {
       email: form.email,
       password: form.password,
       age: form.age,
-      mobile_no: form.mobileNo,
+      mobileNo: form.mobileNo,
     };
 
     try {
@@ -60,7 +60,9 @@ const Signup = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-md w-full max-w-sm shadow-md">
+       
         <h2 className="text-2xl font-bold mb-4 text-center">Signup</h2>
 
         <input

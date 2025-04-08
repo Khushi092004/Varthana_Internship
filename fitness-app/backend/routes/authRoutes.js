@@ -9,6 +9,6 @@ router.post("/login", login);
 router.get("/profile", verifyToken, (req, res) => {
     res.json({ message: " User authenticated", user: req.user });
 });
-
 router.get("/me", verifyToken, getCurrentUser);
+
 module.exports = router;

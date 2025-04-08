@@ -6,8 +6,7 @@ const Dashboard = () => {
     <div>
       
       <div className="p-4">
-        <h1 className="text-2xl font-semibold">Welcome to Your Dashboard 🎉</h1>
-        {/* Yahan personalized content aayega */}
+        <h1 className="text-2xl font-semibold">Welcome to Your Dashboard </h1>
       </div>
     </div>
   );

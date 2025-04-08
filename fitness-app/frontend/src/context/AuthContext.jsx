@@ -30,6 +30,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// ✅ Hook for easy access
+//  Hook for easy access
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

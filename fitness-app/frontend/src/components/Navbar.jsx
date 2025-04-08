@@ -7,8 +7,8 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear auth or localStorage logic here if any
-    alert('✅ Logged out!');
+    
+    alert('Logged out!');
     navigate('/');
   };
 
@@ -39,13 +39,13 @@ const Navbar = () => {
                 className="block px-4 py-2 hover:bg-gray-100 border-b"
                 onClick={() => setShowDropdown(false)}
               >
-                ℹ️ About
+                 About
               </Link>
               <button
                 onClick={handleLogout}
                 className="block w-full text-left px-4 py-2 hover:bg-gray-100"
               >
-                🚪 Logout
+                 Logout
               </button>
             </div>
           )}
