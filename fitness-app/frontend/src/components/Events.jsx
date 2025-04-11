@@ -25,7 +25,8 @@ const Events = () => {
           },
         });
         const data = await res.json();
-        setEvents(data);
+        console.log("Events fetched: ", data);
+        setEvents(data.events);
       } catch (error) {
         console.error("Failed to fetch events:", error);
       }
@@ -122,7 +123,7 @@ const Events = () => {
         <label className="block mb-2 font-semibold">Select Event</label>
         <select id="eventSelect" name="event" onChange={handleEventChange} className="w-full mb-4 p-2 border rounded">
           <option value="">-- Choose an event --</option>
-          {events.map(event => (
+          {Array.isArray(events) && events.map(event => ( //check if events is an array ...and so u wount get the map arry abh ..!
             <option key={event.id} value={event.id}>{event.name}</option>
           ))}
         </select>
@@ -133,8 +134,8 @@ const Events = () => {
             <label className="block mb-2 font-semibold">Select Unit</label>
             <select value={selectedUnit} onChange={e => setSelectedUnit(e.target.value)} className="w-full mb-4 p-2 border rounded">
               <option value="">-- Choose unit --</option>
-              {units.map(unit => (
-                <option key={unit} value={unit}>{unit}</option>
+              {units.map((unit, index) => (
+                <option key={index} value={unit}>{unit}</option>
               ))}
             </select>
           </>
