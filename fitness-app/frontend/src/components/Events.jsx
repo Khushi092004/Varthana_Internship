@@ -11,9 +11,11 @@ const Events = () => {
   const [selectedUnit, setSelectedUnit] = useState("");
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [distance, setDistance] = useState(0);
+
   const timerRef = useRef(null);
 
-  //  Fetch events from backend
+  // Fetch events from backend
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -32,16 +34,21 @@ const Events = () => {
     fetchEvents();
   }, []);
 
-  //  Event selection changes
+  // Handle event change
   const handleEventChange = (e) => {
     const eventId = e.target.value;
     const event = events.find(ev => ev.id.toString() === eventId);
+    if (!event) {
+      setSelectedEvent(null);
+      setUnits([]);
+      return;
+    }
     setSelectedEvent(event);
     setSelectedUnit("");
     setUnits(event.unit.split(",").map(u => u.trim()));
   };
 
-  //  Timer logic
+  // Timer logic
   useEffect(() => {
     if (isRunning) {
       timerRef.current = setInterval(() => {
@@ -65,16 +72,55 @@ const Events = () => {
     setTime(0);
   };
 
+  // Save record to backend
+  const handleSaveRecord = async () => {
+    if (!selectedEvent || !selectedUnit || time === 0) {
+      alert("Please complete all fields and ensure timer has run.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/activities/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          event_id: selectedEvent.id,
+          duration: time,
+          distance: distance,
+        }),
+      });
+
+      const data = await response.json();
+      console.log("Saved Activity:", data);
+      
+      if (response.ok) {
+        alert("Activity saved successfully!");
+        setSelectedEvent(null);
+        setSelectedUnit(null);
+        setUnits([]);
+        setDistance(0);
+        resetTimer();
+      } else {
+        alert("Error saving activity.");
+      }
+    } catch (error) {
+      console.error("Save Record Error:", error);
+      alert("Error saving activity.");
+    }
+  };
+
   return (
     <>
-      
       <div className="p-6 max-w-xl mx-auto">
         <h2 className="text-2xl font-bold mb-4">Events</h2>
         <p className="mb-6">Hello User #{id}! Track your activity below.</p>
 
         {/* Event Dropdown */}
         <label className="block mb-2 font-semibold">Select Event</label>
-        <select onChange={handleEventChange} className="w-full mb-4 p-2 border rounded">
+        <select id="eventSelect" name="event" onChange={handleEventChange} className="w-full mb-4 p-2 border rounded">
           <option value="">-- Choose an event --</option>
           {events.map(event => (
             <option key={event.id} value={event.id}>{event.name}</option>
@@ -85,7 +131,7 @@ const Events = () => {
         {units.length > 0 && (
           <>
             <label className="block mb-2 font-semibold">Select Unit</label>
-            <select value={selectedUnit} onChange={e => setSelectedUnit(e.target.value)} className="w-full mb-6 p-2 border rounded">
+            <select value={selectedUnit} onChange={e => setSelectedUnit(e.target.value)} className="w-full mb-4 p-2 border rounded">
               <option value="">-- Choose unit --</option>
               {units.map(unit => (
                 <option key={unit} value={unit}>{unit}</option>
@@ -94,11 +140,25 @@ const Events = () => {
           </>
         )}
 
+        {/* Distance Input */}
+        {selectedEvent && selectedUnit && (
+          <div className="mb-4">
+            <label className="block mb-2 font-semibold">Distance ({selectedUnit})</label>
+            <input
+              type="number"
+              placeholder={`Enter distance in ${selectedUnit}`}
+              value={distance}
+              onChange={(e) => setDistance(Number(e.target.value))}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+        )}
+
         {/* Timer UI */}
         {selectedEvent && selectedUnit && (
           <div className="text-center">
             <div className="text-3xl font-mono mb-4">{formatTime()}</div>
-            <div className="space-x-2">
+            <div className="space-x-2 mb-4">
               <button
                 onClick={() => setIsRunning(!isRunning)}
                 className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -116,6 +176,16 @@ const Events = () => {
                 className="bg-red-500 text-white px-4 py-2 rounded"
               >
                 Reset
+              </button>
+            </div>
+
+            {/* Save Record Button */}
+            <div className="mt-4">
+              <button
+                onClick={handleSaveRecord}
+                className="bg-green-600 text-white px-4 py-2 rounded"
+              >
+                Save Record
               </button>
             </div>
           </div>
