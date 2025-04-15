@@ -31,9 +31,16 @@ module.exports = {
     `,
   
     GET_PENDING_REQUESTS: `
-      SELECT * FROM friendships 
-      WHERE receiver_id = $1 AND status = 'pending';
+      SELECT 
+        f.id, 
+        f.requester_id, 
+        u.username AS requester_username, 
+        u.email AS requester_email
+      FROM friendships f
+      JOIN users u ON f.requester_id = u.id
+      WHERE f.receiver_id = $1 AND f.status = 'pending';
     `,
+
   
     CHECK_EXISTING_REQUEST: `
       SELECT * FROM friendships 
