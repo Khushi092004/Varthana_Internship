@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Navbar from './Navbar';
 import { useParams } from 'react-router-dom';
+import { getToken } from "../utils/tokenHelper";
+
 
 const Friends = () => {
   const { id } = useParams(); // Current logged-in user ID
@@ -13,7 +15,7 @@ const Friends = () => {
   useEffect(() => {
     const fetchFriendData = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = getToken();
         console.log("Token being sent:", token);
 
         const resFriends = await axios.get(`/api/friends/friends`, {
@@ -58,7 +60,7 @@ const Friends = () => {
 
   const acceptRequest = async (requesterId) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       await axios.post(`/api/friends/accept-request`, { requester_id: requesterId }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -73,7 +75,7 @@ const Friends = () => {
 
   const rejectRequest = async (requesterId) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       await axios.post(`/api/friends/reject-request`, { requester_id: requesterId }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -85,7 +87,7 @@ const Friends = () => {
 
   const sendFriendRequest = async (receiverId) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       await axios.post(`/api/friends/send-request`, { receiver_id: receiverId }, {
         headers: { Authorization: `Bearer ${token}` }
       });

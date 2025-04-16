@@ -5,13 +5,13 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    // Try to load user from localStorage
-    const savedUser = localStorage.getItem('user');
+    // Try to load user from sessionStorage
+    const savedUser = sessionStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
   useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(user));
+    sessionStorage.setItem('user', JSON.stringify(user));
   }, [user]);
 
   const login = (userData) => {
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
   };
 
   return (
@@ -30,6 +30,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-//  Hook for easy access
-// eslint-disable-next-line react-refresh/only-export-components
+
 export const useAuth = () => useContext(AuthContext);

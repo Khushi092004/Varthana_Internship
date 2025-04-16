@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getToken } from "../utils/tokenHelper";
 
 const Activities = () => {
   const [activities, setActivities] = useState([]);
@@ -11,7 +12,7 @@ const Activities = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = getToken();
         const res = await axios.get("http://localhost:5000/api/activities/my", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -31,7 +32,7 @@ const Activities = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = getToken();
         const res = await axios.get("http://localhost:5000/api/events/all", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -76,7 +77,7 @@ const Activities = () => {
 
         {events.map((event) => (
           <button
-            key={event._id} // Use _id or id based on your DB
+            key={event._id} 
             className={`px-4 py-1 rounded-full border ${
               selectedEvent === event.name
                 ? "bg-blue-600 text-white"
@@ -91,9 +92,10 @@ const Activities = () => {
 
         {/*Activity Cards */}
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredActivities.map((activity) => (
+        
+        {filteredActivities.map((activity,index) => (
           <div
-            key={activity.id}
+            key={activity.id || activity._id || index} //fall back
             className="bg-white shadow-md rounded-lg p-4 border"
           >
             <h3 className="text-lg font-bold text-blue-600">

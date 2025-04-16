@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getToken } from "../utils/tokenHelper";
+
 
 const About = () => {
   const [user, setUser] = useState(null);
@@ -7,7 +9,7 @@ const About = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = getToken();
         console.log("Token from localStorage:", token);
 
         const res = await axios.get("http://localhost:5000/auth/me",{

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from './Navbar';
 import { useParams } from 'react-router-dom';
+import { getToken } from "../utils/tokenHelper";
 
 const Events = () => {
   const { id } = useParams();
@@ -21,7 +22,7 @@ const Events = () => {
       try {
         const res = await fetch("http://localhost:5000/api/events/all", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, 
+            Authorization: `Bearer ${getToken()}`, 
           },
         });
         const data = await res.json();
@@ -85,7 +86,7 @@ const Events = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify({
           event_id: selectedEvent.id,

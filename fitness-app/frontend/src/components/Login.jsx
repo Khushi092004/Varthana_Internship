@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { setToken } from "../utils/tokenHelper"; 
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -36,7 +37,7 @@ const Login = () => {
         alert("Login successful!");
         
         // Store token in localStorage/sessionStorage
-        localStorage.setItem("token", data.token);
+        setToken(data.token); 
         navigate(`/dashboard/${data.user.id}`);
 
       } else {
