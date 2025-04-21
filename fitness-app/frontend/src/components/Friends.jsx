@@ -3,11 +3,12 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import { useParams } from 'react-router-dom';
 import { getToken } from "../utils/tokenHelper";
+import { useNavigate } from "react-router-dom";
 
 
 const Friends = () => {
   const { id } = useParams(); // Current logged-in user ID
-
+  const navigate = useNavigate();
   const [friends, setFriends] = useState([]);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [users, setUsers] = useState([]);
@@ -17,6 +18,11 @@ const Friends = () => {
       try {
         const token = getToken();
         console.log("Token being sent:", token);
+          if (!token) {
+            alert("No token found. Please login again.");
+            navigate("/");
+            return;
+          }
 
         const resFriends = await axios.get(`/api/friends/friends`, {
           headers: { Authorization: `Bearer ${token}` }
@@ -56,7 +62,7 @@ const Friends = () => {
     };
 
     fetchFriendData();
-  }, [id]);
+  }, [id, navigate]);
 
   const acceptRequest = async (requesterId) => {
     try {
@@ -88,6 +94,8 @@ const Friends = () => {
   const sendFriendRequest = async (receiverId) => {
     try {
       const token = getToken();
+      console.log("Sending friend request to receiver_id:", receiverId);
+
       await axios.post(`/api/friends/send-request`, { receiver_id: receiverId }, {
         headers: { Authorization: `Bearer ${token}` }
       });

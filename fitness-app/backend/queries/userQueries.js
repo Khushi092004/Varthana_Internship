@@ -4,15 +4,18 @@ module.exports = {
   FIND_USER_BY_ID: "SELECT id, username, email FROM users WHERE id = $1",
   GET_USER_BY_ID: "SELECT id, username, email, age, mobile_no FROM users WHERE id = $1",
   GET_RANDOM_USERS: `
-    SELECT id, username, email FROM users
-    WHERE id != $1
+    SELECT id, username, email 
+    FROM users
+    WHERE id != $1  -- Exclude the logged-in user (yourself)
     AND id NOT IN (
       SELECT CASE
         WHEN requester_id = $1 THEN receiver_id
         ELSE requester_id
       END
       FROM friendships
-      WHERE requester_id = $1 OR receiver_id = $1
+      WHERE 
+        (requester_id = $1 OR receiver_id = $1)  -- Check both requester and receiver
+        AND status IN ('pending', 'accepted')  -- Exclude users with whom you have pending/accepted requests
     )
     ORDER BY RANDOM()
     LIMIT 10;

@@ -74,3 +74,16 @@ exports.getPendingRequests = async (req, res) => {
     res.status(500).json({ message: "Error fetching pending requests", error: error.message });
   }
 };
+
+// Get Sent Pending Friend Requests
+exports.getSentRequests = async (req, res) => {
+  const user_id = req.user.id;
+
+  try {
+    const sent = await pool.query(queries.GET_SENT_REQUESTS, [user_id]);
+    res.status(200).json(sent.rows);
+  } catch (error) {
+    console.error("Get Sent Requests Error:", error);
+    res.status(500).json({ message: "Error fetching sent requests", error: error.message });
+  }
+};

@@ -46,6 +46,18 @@ module.exports = {
       SELECT * FROM friendships 
       WHERE (requester_id = $1 AND receiver_id = $2) 
          OR (requester_id = $2 AND receiver_id = $1);
-    `
+         AND status IN ('pending', 'accepted');
+    `,
+
+    GET_SENT_REQUESTS: `
+    SELECT 
+      f.id,
+      f.receiver_id,
+      u.username AS receiver_username,
+      u.email AS receiver_email
+    FROM friendships f
+    JOIN users u ON f.receiver_id = u.id
+    WHERE f.requester_id = $1 AND f.status = 'pending';
+    `,
   };
   

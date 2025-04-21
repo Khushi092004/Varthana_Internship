@@ -21,4 +21,8 @@ router.get("/friends", friendshipController.getUserFriends);
 // Get all pending friend requests received by the user
 router.get("/pending-requests", friendshipController.getPendingRequests);
 
+// Get all pending sent friend requests
+router.get("/sent-requests", friendshipController.getSentRequests);
+
+
 module.exports = router;
